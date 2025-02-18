@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "352810952208",
+    "project_id": "billscalculator",
+    "storage_bucket": "billscalculator.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:352810952208:android:faa1a4eea43ffe01190c95",
+        "android_client_info": {
+          "package_name": "com.example.bills_calculator"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrnxDr-kwAnW_70ip6uawCbYBOkD5bu0Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:352810952208:android:b308f7b2ef9f006f190c95",
+        "android_client_info": {
+          "package_name": "com.goweb.billscalculator"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrnxDr-kwAnW_70ip6uawCbYBOkD5bu0Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
