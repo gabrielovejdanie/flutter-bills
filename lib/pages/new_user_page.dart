@@ -60,7 +60,7 @@ class _NewUserPageState extends State<LoginPage> {
   }
 
   Widget _submitButton() {
-    return ElevatedButton(
+    return FilledButton(
       onPressed:
           isLogin ? signInWithEmailAndPassword : createUserWithEmailAndPassword,
       child: Text(isLogin ? 'Login' : 'Create Account'),

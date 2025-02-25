@@ -1,6 +1,5 @@
 import 'package:bills_calculator/core/start_based_on_login.dart';
 import 'package:bills_calculator/theme/bills_provider.dart';
-import 'package:bills_calculator/theme/theme.dart';
 import 'package:bills_calculator/theme/theme_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';

@@ -10,6 +10,9 @@ environment:
   sdk: ">=3.4.1 <4.0.0"
 
 dependencies:
+  flutter_native_splash:
+  uuid:
+  flutter_launcher_icons:
   cloud_firestore: ^5.6.3
   firebase_auth: ^5.4.2
   firebase_core: ^3.10.1
@@ -19,12 +22,38 @@ dependencies:
     sdk: flutter
   flutterfire_cli: ^1.0.0
   provider:
+  intl: any
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^4.0.0
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/splash_icons/app_icon_wide_house.png"
+  background_color: "#17130B"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/images/bills_eur.png"
+    background_color: "#17130B"
+    theme_color: "#17130B"
+  windows:
+    generate: true
+    image_path: "assets/images/bills_eur.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/images/bills_eur.png"
+
+flutter_native_splash:
+  color: "#17130B"
+  image: "assets/splash_icons/splash_wide_house.png"
+  android_12:
+    image: "assets/splash_icons/splash_wide_house.png"
 
 flutter:
   fonts:
