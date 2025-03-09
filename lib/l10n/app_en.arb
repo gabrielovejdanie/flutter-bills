@@ -1,0 +1,38 @@
+{
+    "appTitle":"Bill Tracker",
+    "language": "English",
+    "@language": {
+        "description": "Current language"
+    },
+    "homeTitle": "Bills Tracker",
+    "@homeTitle": {
+        "description": "Greeting"
+    },
+    "segmentedUnpaid": "Unpaid",
+    "segmentedPaid": "Paid",
+    "segmentedAll": "All",
+    "totalPerPerson": "Per Person: ",
+    "quantity": "Quantity: ",
+    "pricePerUnit": "Price per {unit}: ",
+    "@pricePerUnit": {
+        "description": "Price per unit",
+        "placeholders": {
+            "unit": {
+                "type": "String"
+            }
+        }
+    },
+    "nrOfPeople": "Nr. of people: ",
+    "setToPaid": "Set to paid",
+    "pricePerPerson": "Price per person: ",
+    
+    "addBillTitle": "Add Bill",
+    "billName": "Bill name",
+    "quantityOfUnits": "Quantity (kW,mc) *optional",
+    "totalValue": "Total value",
+    "numberOfPeople": "Number of people",
+    "unitOptional": "Unit (kW, mc) *optional",
+    "currencyOptional": "Currency (default lei) *optional",
+    "selectMonth": "Select month of the bill",
+    "submit": "Submit"
+}

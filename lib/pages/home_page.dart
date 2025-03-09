@@ -1,18 +1,19 @@
-import 'dart:convert';
-
 import 'package:bills_calculator/basic_components/app_bar.dart';
-import 'package:bills_calculator/basic_components/button.dart';
 import 'package:bills_calculator/basic_components/bill_card.dart';
+import 'package:bills_calculator/basic_components/drawer.dart';
 import 'package:bills_calculator/basic_components/floating_new_bill_button.dart';
 import 'package:bills_calculator/core/auth.dart';
 import 'package:bills_calculator/core/database_service.dart';
+import 'package:bills_calculator/core/language_provider.dart';
 import 'package:bills_calculator/models/bill.dart';
+import 'package:bills_calculator/models/months.dart';
 import 'package:bills_calculator/pages/add_bill_page.dart';
-import 'package:bills_calculator/theme/bills_provider.dart';
+import 'package:bills_calculator/core/bills_provider.dart';
 import 'package:bills_calculator/theme/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,44 +24,33 @@ class HomePage extends StatefulWidget {
 }
 
 String initialFilter = 'unpaid';
+String initialCurrency = 'lei';
 double totalOfSelected = 0;
 double totalPerPerson = 0;
 
 class _HomePageState extends State<HomePage> {
   final DatabaseService _databaseService = DatabaseService();
   final User? user = Auth().currentUser;
-  Future<void> _signOut() async {
-    await Auth().signOut();
-  }
 
-  Widget _userEmail() {
-    return Text(
-      '${user?.email}',
-      style: const TextStyle(fontSize: GlobalThemeVariables.p),
-    );
-  }
-
-//  billsProvider.selectedBills
-//                 .map((item) => BillCard(item))
-//                 .toList()),
   Widget generateBillsWidget(BillsProvider billsProvider) {
     if (billsProvider.loading) {
       return const Center(child: CircularProgressIndicator.adaptive());
-    } else if (billsProvider.bills.isNotEmpty) {
+    } else if (billsProvider.selectedBillsForMonth.isNotEmpty) {
       return SizedBox(
-        height: MediaQuery.sizeOf(context).height / 1.55,
+        height: MediaQuery.sizeOf(context).height / 1.8,
         child: RefreshIndicator(
           onRefresh: () {
             return _databaseService.getBills(context);
           },
           child: ListView(
               shrinkWrap: true,
-              children:
-                  billsProvider.selectedBills.map((e) => BillCard(e)).toList()),
+              children: billsProvider.selectedBillsForMonth
+                  .map((e) => BillCard(e))
+                  .toList()),
         ),
       );
     } else {
-      return const Center(child: Text('No Bills added'));
+      return const Center(child: Text('No Bills'));
     }
   }
 
@@ -69,15 +59,18 @@ class _HomePageState extends State<HomePage> {
     _databaseService.getBills(context).then((bills) {
       Provider.of<BillsProvider>(context, listen: false)
           .changeSelectedBills(initialFilter);
+      Provider.of<BillsProvider>(context, listen: false)
+          .changeMonthFilter(months.first.name);
     });
 
     Provider.of<BillsProvider>(context, listen: false).addListener(() {
-      List<Bill> bills =
-          Provider.of<BillsProvider>(context, listen: false).selectedBills;
+      List<Bill> bills = Provider.of<BillsProvider>(context, listen: false)
+          .selectedBillsForMonth;
       setState(() {
         totalOfSelected = 0;
         totalPerPerson = 0;
         if (bills.isNotEmpty) {
+          initialCurrency = bills[0].currency;
           for (var i = 0; i < bills.length; i++) {
             totalOfSelected += bills[i].total;
           }
@@ -91,47 +84,60 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const CustomAppBar('Home Page'),
-        drawer: Drawer(
-          // Add a ListView to the drawer. This ensures the user can scroll
-          // through the options in the drawer if there isn't enough vertical
-          // space to fit everything.
-          child: ListView(
-            // Important: Remove any padding from the ListView.
-            padding: EdgeInsets.zero,
-            children: [
-              const DrawerHeader(
-                child: Text('Settings'),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: <Widget>[
-                      _userEmail(),
-                      PrimaryButton('Sign Out', _signOut),
-                    ]),
-              ),
-            ],
-          ),
-        ),
+        appBar: CustomAppBar(AppLocalizations.of(context)!.homeTitle),
+        drawer: BillsDrawer(),
         body: Container(
             color: Theme.of(context).colorScheme.surface,
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
+                DropdownMenu<Month>(
+                  expandedInsets: EdgeInsets.zero,
+                  initialSelection: months.first,
+                  dropdownMenuEntries: months.map((Month month) {
+                    return DropdownMenuEntry<Month>(
+                      value: month,
+                      label: Provider.of<LanguageProvider>(context).locale ==
+                              const Locale('ro')
+                          ? month.romanianName
+                          : month.name,
+                    );
+                  }).toList(),
+                  onSelected: (value) {
+                    if (value != null) {
+                      setState(() {
+                        Provider.of<BillsProvider>(context, listen: false)
+                            .changeMonthFilter(value.name);
+                      });
+                    }
+                  },
+                ),
                 SegmentedButton(
-                  segments: const [
+                  segments: [
                     ButtonSegment(
                         value: 'unpaid',
-                        label: Text('Not Paid'),
+                        label: Text(
+                          AppLocalizations.of(context)!.segmentedUnpaid,
+                          style:
+                              const TextStyle(fontSize: GlobalThemeVariables.p),
+                        ),
                         enabled: true),
                     ButtonSegment(
-                        value: 'paid', label: Text('Paid'), enabled: true),
+                        value: 'paid',
+                        label: Text(
+                          AppLocalizations.of(context)!.segmentedPaid,
+                          style:
+                              const TextStyle(fontSize: GlobalThemeVariables.p),
+                        ),
+                        enabled: true),
                     ButtonSegment(
-                        value: 'all', label: Text('All'), enabled: true)
+                        value: 'all',
+                        label: Text(
+                          AppLocalizations.of(context)!.segmentedAll,
+                          style:
+                              const TextStyle(fontSize: GlobalThemeVariables.p),
+                        ),
+                        enabled: true)
                   ],
                   selected: {initialFilter},
                   onSelectionChanged: (newFilter) {
@@ -148,14 +154,14 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Total: ${totalOfSelected.toStringAsFixed(2)}',
-                          style: const TextStyle(
-                              fontSize: GlobalThemeVariables.h3),
+                          'Total: ${totalOfSelected.toStringAsFixed(2)} $initialCurrency',
+                          style:
+                              const TextStyle(fontSize: GlobalThemeVariables.p),
                         ),
                         Text(
-                          'Per person: ${totalPerPerson.toStringAsFixed(2)}',
-                          style: const TextStyle(
-                              fontSize: GlobalThemeVariables.h3),
+                          '${AppLocalizations.of(context)!.totalPerPerson}${totalPerPerson.toStringAsFixed(2)} $initialCurrency',
+                          style:
+                              const TextStyle(fontSize: GlobalThemeVariables.p),
                         )
                       ]),
                 ),

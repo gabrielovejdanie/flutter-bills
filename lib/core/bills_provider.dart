@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class BillsProvider with ChangeNotifier {
   List<Bill> _bills = [];
   String _billsFilter = 'all';
+  String _monthFilter = 'all';
   bool _loading = true;
 
   List<Bill> get bills => _bills;
@@ -20,6 +21,16 @@ class BillsProvider with ChangeNotifier {
     }
   }
 
+  List<Bill> get selectedBillsForMonth {
+    if (_monthFilter == 'Filter by month') {
+      return selectedBills;
+    } else {
+      return selectedBills.where((b) {
+        return b.month == _monthFilter;
+      }).toList();
+    }
+  }
+
   set bills(List<Bill> bills) {
     _bills = bills;
     notifyListeners();
@@ -32,6 +43,11 @@ class BillsProvider with ChangeNotifier {
 
   changeSelectedBills(filter) {
     _billsFilter = filter;
+    notifyListeners();
+  }
+
+  changeMonthFilter(filter) {
+    _monthFilter = filter;
     notifyListeners();
   }
 

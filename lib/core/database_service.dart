@@ -1,6 +1,6 @@
 import 'package:bills_calculator/core/auth.dart';
 import 'package:bills_calculator/models/bill.dart';
-import 'package:bills_calculator/theme/bills_provider.dart';
+import 'package:bills_calculator/core/bills_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +15,7 @@ class DatabaseService {
 
   Future<List<Bill>> getBills(context) {
     List<Bill> billsPerUser = [];
+    print(user?.uid);
     if (user?.uid != null) {
       return db
           .collection(BILLS_COLLECTION_REF)

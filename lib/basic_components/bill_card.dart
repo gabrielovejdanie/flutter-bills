@@ -1,12 +1,26 @@
 import 'package:bills_calculator/basic_components/button.dart';
 import 'package:bills_calculator/core/database_service.dart';
+import 'package:bills_calculator/core/language_provider.dart';
 import 'package:bills_calculator/models/bill.dart';
+import 'package:bills_calculator/models/months.dart';
 import 'package:bills_calculator/pages/edit_bill_page.dart';
 import 'package:bills_calculator/theme/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class BillCard extends StatelessWidget {
   final Bill bill;
+
+  String getMonth(context, String name) {
+    Locale locale =
+        Provider.of<LanguageProvider>(context, listen: false).locale;
+    if (locale == const Locale('ro')) {
+      return months.firstWhere((m) => m.name == name).romanianName;
+    } else {
+      return months.firstWhere((m) => m.name == name).name;
+    }
+  }
 
   const BillCard(this.bill, {super.key});
 
@@ -31,7 +45,7 @@ class BillCard extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                       child: Text(
-                          '${bill.name} - ${bill.month} ${bill.from.toDate().year}',
+                          '${bill.name} - ${getMonth(context, bill.month)} ${bill.from.toDate().year}',
                           style: const TextStyle(
                               fontSize: GlobalThemeVariables.h2,
                               fontWeight: FontWeight.bold)),
@@ -70,18 +84,25 @@ class BillCard extends StatelessWidget {
                   ),
                 ],
               ),
-              Text('Total: ${bill.total.toStringAsFixed(2)}'),
-              Text('Quantity: ${bill.quantity.toStringAsFixed(0)}'),
+              Text('Total: ${bill.total.toStringAsFixed(2)} ${bill.currency}'),
+              bill.quantity.toStringAsFixed(0) != '1'
+                  ? Text(
+                      '${AppLocalizations.of(context)!.quantity}${bill.quantity.toStringAsFixed(0)}')
+                  : Container(),
+              bill.quantity.toStringAsFixed(0) != '1'
+                  ? Text(
+                      '${AppLocalizations.of(context)!.pricePerUnit(bill.unit)}${bill.pricePerUnit.toStringAsFixed(2)} ${bill.currency}')
+                  : Container(),
               Text(
-                  'Price per ${bill.unit}: ${bill.pricePerUnit.toStringAsFixed(2)}'),
-              Text('Nr. of people: ${bill.nrOfPeople.toStringAsFixed(0)}'),
+                  '${AppLocalizations.of(context)!.nrOfPeople}${bill.nrOfPeople.toStringAsFixed(0)}'),
               Text(
-                  'Price per person: ${bill.pricePerPerson.toStringAsFixed(2)}'),
+                  '${AppLocalizations.of(context)!.pricePerPerson}${bill.pricePerPerson.toStringAsFixed(2)} ${bill.currency}'),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   !bill.isPaid
-                      ? PrimaryButton('Set to paid', () {
+                      ? PrimaryButton(AppLocalizations.of(context)!.setToPaid,
+                          () {
                           DatabaseService db = DatabaseService();
                           db.togglePaid(context, bill);
                         })

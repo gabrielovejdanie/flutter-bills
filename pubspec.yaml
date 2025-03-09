@@ -10,6 +10,7 @@ environment:
   sdk: ">=3.4.1 <4.0.0"
 
 dependencies:
+  intl_utils: ^2.1.0
   flutter_native_splash:
   uuid:
   flutter_launcher_icons:
@@ -23,6 +24,7 @@ dependencies:
   flutterfire_cli: ^1.0.0
   provider:
   intl: any
+  flutter_secure_storage: ^8.1.0
 
 dev_dependencies:
   flutter_test:

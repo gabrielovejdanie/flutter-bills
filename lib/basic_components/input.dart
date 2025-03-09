@@ -21,7 +21,6 @@ class BillsInput extends StatelessWidget {
       autofocus: autofocus,
       validator: required
           ? (value) {
-              print(value);
               if (value == null || value.isEmpty) {
                 return '$title required';
               }

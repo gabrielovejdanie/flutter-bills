@@ -1,14 +1,16 @@
 import 'package:bills_calculator/basic_components/app_bar.dart';
 import 'package:bills_calculator/basic_components/button.dart';
+import 'package:bills_calculator/basic_components/drawer.dart';
 import 'package:bills_calculator/basic_components/input.dart';
+import 'package:bills_calculator/core/language_provider.dart';
 import 'package:bills_calculator/models/bill.dart';
 import 'package:bills_calculator/models/months.dart';
-import 'package:bills_calculator/theme/bills_provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:bills_calculator/core/bills_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:bills_calculator/core/database_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddBillFormPage extends StatefulWidget {
   const AddBillFormPage({super.key});
@@ -40,10 +42,12 @@ class _AddBillFormPageState extends State<AddBillFormPage> {
     if (_currencyController.text.isEmpty) {
       _currencyController.text = 'lei';
     }
+    if (_quantityController.text.isEmpty) {
+      _quantityController.text = '0';
+    }
     if (_totalController.text.isNotEmpty &&
         _nrOfPeopleController.text.isNotEmpty &&
-        _nameController.text.isNotEmpty &&
-        _quantityController.text.isNotEmpty) {
+        _nameController.text.isNotEmpty) {
       double pricePerPerson = double.parse(_totalController.text) /
           double.parse(_nrOfPeopleController.text);
       double pricePerUnit = double.parse(_totalController.text) /
@@ -59,7 +63,10 @@ class _AddBillFormPageState extends State<AddBillFormPage> {
           pricePerUnit: pricePerUnit,
           from: selectedMonth.startDate,
           to: selectedMonth.endDate,
-          month: selectedMonth.name,
+          month: Provider.of<LanguageProvider>(context).locale ==
+                  const Locale('ro')
+              ? selectedMonth.romanianName
+              : selectedMonth.name,
           isPaid: false,
           id: uuid.v4());
       DatabaseService db = DatabaseService();
@@ -82,7 +89,8 @@ class _AddBillFormPageState extends State<AddBillFormPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const CustomAppBar('Add Bill'),
+        appBar: CustomAppBar(AppLocalizations.of(context)!.addBillTitle),
+        drawer: BillsDrawer(),
         body: SingleChildScrollView(
           child: ConstrainedBox(
             constraints: const BoxConstraints(),
@@ -91,48 +99,51 @@ class _AddBillFormPageState extends State<AddBillFormPage> {
               padding: const EdgeInsets.all(16),
               children: <Widget>[
                 BillsInput(
-                  'Bill name',
+                  AppLocalizations.of(context)!.billName,
                   _nameController,
                   required: true,
                 ),
                 const SizedBox(height: 10),
                 BillsInput(
-                  'Quantity of units',
-                  _quantityController,
-                  numbersOnly: true,
-                ),
-                const SizedBox(height: 10),
-                BillsInput(
-                  'Total value',
+                  AppLocalizations.of(context)!.totalValue,
                   _totalController,
                   numbersOnly: true,
                 ),
 
                 const SizedBox(height: 10),
                 BillsInput(
-                  'Number of people',
+                  AppLocalizations.of(context)!.numberOfPeople,
                   _nrOfPeopleController,
                   numbersOnly: true,
                 ),
                 const SizedBox(height: 10),
                 BillsInput(
-                  'Unit (kW,mc) *optional',
+                  AppLocalizations.of(context)!.quantityOfUnits,
+                  _quantityController,
+                  numbersOnly: true,
+                ),
+                const SizedBox(height: 10),
+                BillsInput(
+                  AppLocalizations.of(context)!.unitOptional,
                   _unitController,
                 ),
                 const SizedBox(height: 10),
                 BillsInput(
-                  'Currency (default lei) *optional',
+                  AppLocalizations.of(context)!.currencyOptional,
                   _currencyController,
                 ),
                 const SizedBox(height: 10),
-                const Text('Select month of the bill'),
+                Text(AppLocalizations.of(context)!.selectMonth),
                 DropdownMenu<Month>(
                   expandedInsets: EdgeInsets.zero,
                   initialSelection: months.first,
                   dropdownMenuEntries: months.map((Month month) {
                     return DropdownMenuEntry<Month>(
                       value: month,
-                      label: month.name,
+                      label: Provider.of<LanguageProvider>(context).locale ==
+                              const Locale('ro')
+                          ? month.romanianName
+                          : month.name,
                     );
                   }).toList(),
                   onSelected: (value) {
@@ -160,7 +171,7 @@ class _AddBillFormPageState extends State<AddBillFormPage> {
                 //   }
                 // }),
 
-                PrimaryButton('Submit', () {
+                PrimaryButton(AppLocalizations.of(context)!.submit, () {
                   submitData();
                 })
               ],

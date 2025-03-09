@@ -1,0 +1,24 @@
+{
+    "appTitle": "Facturile Tale",
+    "language": "Roumanian",
+    "homeTitle": "Facturile Tale",
+    "segmentedUnpaid": "Neplătite",
+    "segmentedPaid": "Plătite",
+    "segmentedAll": "Toate",
+    "totalPerPerson": "Per Persoană: ",
+    "quantity": "Cantitate : ",
+    "pricePerUnit": "Preț per {unit}: ",
+    "nrOfPeople": "Număr de persoane: ",
+    "setToPaid": "Platită",
+    "pricePerPerson": "Preț per persoană: ",
+
+    "addBillTitle": "Adaugă factură",
+    "billName": "Numele facturii",
+    "quantityOfUnits": "Cantitate (kW, mc) *opțional",
+    "totalValue": "Valoare totală",
+    "numberOfPeople": "Număr de persoane",
+    "unitOptional": "Unitate de măsură (kW, mc) *opțional",
+    "currencyOptional": "Monedă (implicit lei) *optional",
+    "selectMonth": "Selectează luna facturii",
+    "submit": "Trimite"
+}

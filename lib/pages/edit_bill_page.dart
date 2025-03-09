@@ -1,10 +1,14 @@
 import 'package:bills_calculator/basic_components/app_bar.dart';
 import 'package:bills_calculator/basic_components/button.dart';
+import 'package:bills_calculator/basic_components/drawer.dart';
 import 'package:bills_calculator/basic_components/input.dart';
+import 'package:bills_calculator/core/language_provider.dart';
 import 'package:bills_calculator/models/bill.dart';
 import 'package:bills_calculator/models/months.dart';
 import 'package:flutter/material.dart';
 import 'package:bills_calculator/core/database_service.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditBillFormPage extends StatefulWidget {
   final Bill billToEdit;
@@ -82,9 +86,9 @@ class _EditBillFormPageState extends State<EditBillFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('controller ${_nameController.text}');
     return Scaffold(
-        appBar: const CustomAppBar('Add Bill'),
+        appBar: const CustomAppBar('Edit Bill'),
+        drawer: BillsDrawer(),
         body: SingleChildScrollView(
           child: ConstrainedBox(
             constraints: const BoxConstraints(),
@@ -93,56 +97,57 @@ class _EditBillFormPageState extends State<EditBillFormPage> {
               padding: const EdgeInsets.all(16),
               children: <Widget>[
                 BillsInput(
-                  'Bill name',
+                  AppLocalizations.of(context)!.billName,
                   _nameController,
                   required: true,
                 ),
                 const SizedBox(height: 10),
                 BillsInput(
-                  'Quantity of units',
-                  _quantityController,
-                  numbersOnly: true,
-                ),
-                const SizedBox(height: 10),
-                BillsInput(
-                  'Total value',
+                  AppLocalizations.of(context)!.totalValue,
                   _totalController,
                   numbersOnly: true,
                 ),
 
                 const SizedBox(height: 10),
                 BillsInput(
-                  'Number of people',
+                  AppLocalizations.of(context)!.numberOfPeople,
                   _nrOfPeopleController,
                   numbersOnly: true,
                 ),
                 const SizedBox(height: 10),
                 BillsInput(
-                  'Unit (kW,mc) *optional',
+                  AppLocalizations.of(context)!.quantityOfUnits,
+                  _quantityController,
+                  numbersOnly: true,
+                ),
+                const SizedBox(height: 10),
+                BillsInput(
+                  AppLocalizations.of(context)!.unitOptional,
                   _unitController,
                 ),
                 const SizedBox(height: 10),
                 BillsInput(
-                  'Currency (default lei) *optional',
+                  AppLocalizations.of(context)!.currencyOptional,
                   _currencyController,
                 ),
                 const SizedBox(height: 10),
-                const Text('Select month of the bill'),
+                Text(AppLocalizations.of(context)!.selectMonth),
                 DropdownMenu<Month>(
                   expandedInsets: EdgeInsets.zero,
-                  initialSelection: months
-                      .firstWhere((m) => m.name == widget.billToEdit.month),
+                  initialSelection: months.first,
                   dropdownMenuEntries: months.map((Month month) {
                     return DropdownMenuEntry<Month>(
                       value: month,
-                      label: month.name,
+                      label: Provider.of<LanguageProvider>(context).locale ==
+                              const Locale('ro')
+                          ? month.romanianName
+                          : month.name,
                     );
                   }).toList(),
                   onSelected: (value) {
                     if (value != null) {
                       setState(() {
                         selectedMonth = value;
-                        print(selectedMonth.name);
                         monthChanged = true;
                       });
                     }
@@ -164,7 +169,7 @@ class _EditBillFormPageState extends State<EditBillFormPage> {
                 //   }
                 // }),
 
-                PrimaryButton('Save Changes', () {
+                PrimaryButton(AppLocalizations.of(context)!.submit, () {
                   submitData();
                 })
               ],
