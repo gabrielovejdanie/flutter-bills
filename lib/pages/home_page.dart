@@ -27,6 +27,8 @@ String initialFilter = 'unpaid';
 String initialCurrency = 'lei';
 double totalOfSelected = 0;
 double totalPerPerson = 0;
+bool isSelectionMode = false;
+Map<int, bool> selectedFlag = {};
 
 class _HomePageState extends State<HomePage> {
   final DatabaseService _databaseService = DatabaseService();
@@ -79,6 +81,37 @@ class _HomePageState extends State<HomePage> {
       });
     });
     super.initState();
+  }
+
+  Widget _buildSelectIcon(bool isSelected, Bill data) {
+    if (isSelectionMode) {
+      return Icon(
+        isSelected ? Icons.check_box : Icons.check_box_outline_blank,
+        color: Theme.of(context).primaryColor,
+      );
+    } else {
+      return CircleAvatar(
+        child: Text('${data.name}'),
+      );
+    }
+  }
+
+  void onLongPress(bool isSelected, int index) {
+    setState(() {
+      selectedFlag[index] = !isSelected;
+      isSelectionMode = selectedFlag.containsValue(true);
+    });
+  }
+
+  void onTap(bool isSelected, int index) {
+    if (isSelectionMode) {
+      setState(() {
+        selectedFlag[index] = !isSelected;
+        isSelectionMode = selectedFlag.containsValue(true);
+      });
+    } else {
+      // Open Detail Page
+    }
   }
 
   @override
@@ -171,9 +204,39 @@ class _HomePageState extends State<HomePage> {
                 })
               ],
             )),
-        floatingActionButton: FloatingNewBillButton('New Bill', () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const AddBillFormPage()));
-        }));
+        floatingActionButton: FloatingNewBillButton(
+            'New Bill',
+            () => showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: const Text(
+                        'Create new or continue with existing bills?'),
+                    content: const Text(
+                        'Do you want to create a new bill or continue with existing bills?'),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context, 'New');
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const AddBillFormPage()));
+                        },
+                        child: const Text('New Bill'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, 'OK'),
+                        child: const Text('Continue with existing'),
+                      ),
+                    ],
+                  ),
+                ))
+        // () {
+        // Navigator.push(context,
+        //     MaterialPageRoute(builder: (context) => const AddBillFormPage()));
+        // })
+
+        );
   }
 }
