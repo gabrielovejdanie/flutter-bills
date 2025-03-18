@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class BillsProvider with ChangeNotifier {
   List<Bill> _bills = [];
+  List<Bill> billsToEdit = [];
   String _billsFilter = 'all';
   String _monthFilter = 'all';
   bool _loading = true;

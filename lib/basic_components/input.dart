@@ -12,7 +12,8 @@ class BillsInput extends StatelessWidget {
       {this.autofocus = false,
       this.numbersOnly = false,
       this.required = false,
-      super.key});
+      super.key,
+      textEdit});
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +30,7 @@ class BillsInput extends StatelessWidget {
           : null,
       keyboardType: numbersOnly ? TextInputType.number : null,
       textInputAction: TextInputAction.next,
+      onChanged: (value) => {},
       decoration:
           InputDecoration(border: const OutlineInputBorder(), labelText: title),
       inputFormatters: numbersOnly

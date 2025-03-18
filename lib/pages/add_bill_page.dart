@@ -63,7 +63,7 @@ class _AddBillFormPageState extends State<AddBillFormPage> {
           pricePerUnit: pricePerUnit,
           from: selectedMonth.startDate,
           to: selectedMonth.endDate,
-          month: Provider.of<LanguageProvider>(context).locale ==
+          month: Provider.of<LanguageProvider>(context, listen: false).locale ==
                   const Locale('ro')
               ? selectedMonth.romanianName
               : selectedMonth.name,

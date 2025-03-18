@@ -16,7 +16,7 @@ class BillCard extends StatelessWidget {
     Locale locale =
         Provider.of<LanguageProvider>(context, listen: false).locale;
     if (locale == const Locale('ro')) {
-      return months.firstWhere((m) => m.name == name).romanianName;
+      return months.firstWhere((m) => m.romanianName == name).romanianName;
     } else {
       return months.firstWhere((m) => m.name == name).name;
     }
@@ -85,11 +85,11 @@ class BillCard extends StatelessWidget {
                 ],
               ),
               Text('Total: ${bill.total.toStringAsFixed(2)} ${bill.currency}'),
-              bill.quantity.toStringAsFixed(0) != '1'
+              bill.quantity.toStringAsFixed(0) != '0'
                   ? Text(
                       '${AppLocalizations.of(context)!.quantity}${bill.quantity.toStringAsFixed(0)}')
                   : Container(),
-              bill.quantity.toStringAsFixed(0) != '1'
+              bill.quantity.toStringAsFixed(0) != '0'
                   ? Text(
                       '${AppLocalizations.of(context)!.pricePerUnit(bill.unit)}${bill.pricePerUnit.toStringAsFixed(2)} ${bill.currency}')
                   : Container(),

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:uuid/uuid.dart';
 
 class Bill {
   String currency;
@@ -48,6 +49,24 @@ class Bill {
     };
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'currency': currency,
+      'from': from,
+      'name': name,
+      'nrOfPeople': nrOfPeople,
+      'pricePerPerson': pricePerPerson,
+      'pricePerUnit': pricePerUnit,
+      'quantity': quantity,
+      'to': to,
+      'total': total,
+      'unit': unit,
+      'id': id,
+      'isPaid': isPaid,
+      'month': month,
+    };
+  }
+
   Bill.fromJson(Map<String, Object?> json)
       : this(
             currency: json['currency']! as String,
@@ -56,8 +75,13 @@ class Bill {
             nrOfPeople: (json['nrOfPeople'] != null)
                 ? (json['nrOfPeople'] as num).toDouble()
                 : 0.0,
-            pricePerPerson: (json['pricePerPerson'] as num).toDouble(),
-            pricePerUnit: (json['pricePerUnit'] as num).toDouble(),
+            pricePerPerson:
+                (json['pricePerPerson'] as num).toDouble().isInfinite
+                    ? 0.0
+                    : (json['pricePerPerson'] as num).toDouble(),
+            pricePerUnit: (json['pricePerUnit'] as num).toDouble().isInfinite
+                ? 0.0
+                : (json['pricePerUnit'] as num).toDouble(),
             quantity: (json['quantity'] as num).toDouble(),
             to: json['to']! as Timestamp,
             total: (json['total'] as num).toDouble(),
@@ -65,4 +89,24 @@ class Bill {
             id: json['id']! as String,
             month: json['month']! as String,
             isPaid: json['isPaid'] as bool);
+
+  Bill clone() {
+    var uuid = const Uuid();
+
+    return Bill(
+      currency: this.currency,
+      from: this.from,
+      name: this.name,
+      nrOfPeople: this.nrOfPeople,
+      pricePerPerson: this.pricePerPerson,
+      pricePerUnit: this.pricePerUnit,
+      quantity: this.quantity,
+      to: this.to,
+      total: this.total,
+      unit: this.unit,
+      id: uuid.v4(),
+      isPaid: false,
+      month: this.month,
+    );
+  }
 }

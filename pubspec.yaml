@@ -25,6 +25,7 @@ dependencies:
   provider:
   intl: any
   flutter_secure_storage: ^8.1.0
+  flutter_multi_select_items: ^0.4.3
 
 dev_dependencies:
   flutter_test:

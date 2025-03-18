@@ -24,11 +24,18 @@ class DatabaseService {
           .then((event) {
         for (var doc in event.docs) {
           var allBillsPerUser = doc.data()['bills'];
+          print('grabbed data ${allBillsPerUser.length}');
           for (var bill in allBillsPerUser) {
             Bill b = Bill.fromJson(bill);
+            if (b.pricePerPerson.isInfinite) {
+              b.pricePerPerson = 0;
+              b.pricePerUnit = 0;
+            }
+            print(b.pricePerUnit);
             billsPerUser.add(b);
           }
         }
+
         billsPerUser = billsPerUser.reversed.toList();
         Provider.of<BillsProvider>(context, listen: false).bills = billsPerUser;
         Provider.of<BillsProvider>(context, listen: false).loading = false;
