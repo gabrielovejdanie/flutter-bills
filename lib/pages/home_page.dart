@@ -4,6 +4,7 @@ import 'package:bills_calculator/basic_components/drawer.dart';
 import 'package:bills_calculator/core/auth.dart';
 import 'package:bills_calculator/core/database_service.dart';
 import 'package:bills_calculator/core/language_provider.dart';
+import 'package:bills_calculator/core/pb_service.dart';
 import 'package:bills_calculator/models/bill.dart';
 import 'package:bills_calculator/models/months.dart';
 import 'package:bills_calculator/pages/add_bill_page.dart';
@@ -33,9 +34,10 @@ bool isSelectionMode = false;
 Map<int, bool> selectedFlag = {};
 
 class _HomePageState extends State<HomePage> {
+  final pbService = PBService();
+
   final DatabaseService _databaseService = DatabaseService();
   final User? user = Auth().currentUser;
-
   Widget generateBillsWidget(BillsProvider billsProvider) {
     if (billsProvider.loading) {
       return const Center(child: CircularProgressIndicator.adaptive());

@@ -27,6 +27,7 @@ dependencies:
   intl: any
   flutter_secure_storage: ^8.1.0
   flutter_multi_select_items: ^0.4.3
+  pocketbase: ^0.11.0
 
 dev_dependencies:
   flutter_test:
