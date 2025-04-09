@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:bills_calculator/basic_components/app_bar.dart';
-import 'package:bills_calculator/basic_components/button.dart';
 import 'package:bills_calculator/basic_components/drawer.dart';
 import 'package:bills_calculator/basic_components/input.dart';
 import 'package:bills_calculator/core/database_service.dart';
@@ -83,7 +80,7 @@ class _ExistingBillsPageState extends State<ExistingBillsPage> {
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
           child: BillsInput(
-            'New total',
+            AppLocalizations.of(context)!.newTotal,
             existingBills[bill.key].totalController,
             required: true,
           ),
@@ -95,8 +92,8 @@ class _ExistingBillsPageState extends State<ExistingBillsPage> {
   }
 
   void submitData() {
-    if (this.existingBills.any((b) => b.totalController.text.isEmpty)) {
-      showSnackbar(context, 'Please fill in all the fields');
+    if (existingBills.any((b) => b.totalController.text.isEmpty)) {
+      showSnackbar(context, AppLocalizations.of(context)!.fillAllFields);
     } else {
       for (var i = 0; i < clonedBills.length; i++) {
         clonedBills[i].total =
@@ -113,9 +110,9 @@ class _ExistingBillsPageState extends State<ExistingBillsPage> {
         Navigator.pop(context);
         Navigator.pop(context);
         Navigator.pop(context);
-        showSnackbar(context, 'Changes saved');
+        showSnackbar(context, AppLocalizations.of(context)!.changesSaved);
       }).onError((e, _) {
-        showSnackbar(context, 'Error! $e');
+        showSnackbar(context, AppLocalizations.of(context)!.error);
       });
     }
   }
@@ -138,8 +135,8 @@ class _ExistingBillsPageState extends State<ExistingBillsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CustomAppBar(AppLocalizations.of(context)!.addBillTitle),
-        drawer: BillsDrawer(),
+        appBar: CustomAppBar(AppLocalizations.of(context)!.editExistingTitle),
+        drawer: const BillsDrawer(),
         resizeToAvoidBottomInset: true,
         body: SizedBox(
           height: MediaQuery.sizeOf(context).height - 100,
@@ -150,7 +147,7 @@ class _ExistingBillsPageState extends State<ExistingBillsPage> {
           ),
         ),
         floatingActionButton: FloatingActionButton.extended(
-            label: const Text('Save'),
+            label: Text(AppLocalizations.of(context)!.save),
             icon: const Icon(Icons.save),
             onPressed: () {
               submitData();

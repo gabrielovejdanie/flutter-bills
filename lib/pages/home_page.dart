@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
       return const Center(child: CircularProgressIndicator.adaptive());
     } else if (billsProvider.selectedBillsForMonth.isNotEmpty) {
       return SizedBox(
-        height: MediaQuery.sizeOf(context).height / 1.8,
+        height: MediaQuery.sizeOf(context).height / 1.64,
         child: RefreshIndicator(
           onRefresh: () {
             return _databaseService.getBills(context);
@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     } else {
-      return const Center(child: Text('No Bills'));
+      return Center(child: Text(AppLocalizations.of(context)!.noBills));
     }
   }
 
@@ -112,9 +112,69 @@ class _HomePageState extends State<HomePage> {
       );
     } else {
       return CircleAvatar(
-        child: Text('${data.name}'),
+        child: Text(data.name),
       );
     }
+  }
+
+  Widget _buildMonthFilter() {
+    return DropdownMenu<Month>(
+      expandedInsets: EdgeInsets.zero,
+      initialSelection: months.first,
+      dropdownMenuEntries: months.map((Month month) {
+        return DropdownMenuEntry<Month>(
+          value: month,
+          label: Provider.of<LanguageProvider>(context).locale ==
+                  const Locale('ro')
+              ? month.romanianName
+              : month.name,
+        );
+      }).toList(),
+      onSelected: (value) {
+        if (value != null) {
+          setState(() {
+            Provider.of<BillsProvider>(context, listen: false)
+                .changeMonthFilter(value.name);
+          });
+        }
+      },
+    );
+  }
+
+  Widget _buildSegmentedFilter() {
+    return SegmentedButton(
+      segments: [
+        ButtonSegment(
+            value: 'unpaid',
+            label: Text(
+              AppLocalizations.of(context)!.segmentedUnpaid,
+              style: const TextStyle(fontSize: GlobalThemeVariables.p),
+            ),
+            enabled: true),
+        ButtonSegment(
+            value: 'paid',
+            label: Text(
+              AppLocalizations.of(context)!.segmentedPaid,
+              style: const TextStyle(fontSize: GlobalThemeVariables.p),
+            ),
+            enabled: true),
+        ButtonSegment(
+            value: 'all',
+            label: Text(
+              AppLocalizations.of(context)!.segmentedAll,
+              style: const TextStyle(fontSize: GlobalThemeVariables.p),
+            ),
+            enabled: true)
+      ],
+      selected: {initialFilter},
+      onSelectionChanged: (newFilter) {
+        setState(() {
+          Provider.of<BillsProvider>(context, listen: false)
+              .changeSelectedBills(newFilter.first);
+          initialFilter = newFilter.first;
+        });
+      },
+    );
   }
 
   generateMultiSelectItems(List<Bill> bills) {
@@ -169,90 +229,32 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppBar(AppLocalizations.of(context)!.homeTitle),
-        drawer: BillsDrawer(),
+        drawer: const BillsDrawer(),
         body: Container(
             color: Theme.of(context).colorScheme.surface,
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                DropdownMenu<Month>(
-                  expandedInsets: EdgeInsets.zero,
-                  initialSelection: months.first,
-                  dropdownMenuEntries: months.map((Month month) {
-                    return DropdownMenuEntry<Month>(
-                      value: month,
-                      label: Provider.of<LanguageProvider>(context).locale ==
-                              const Locale('ro')
-                          ? month.romanianName
-                          : month.name,
-                    );
-                  }).toList(),
-                  onSelected: (value) {
-                    if (value != null) {
-                      setState(() {
-                        Provider.of<BillsProvider>(context, listen: false)
-                            .changeMonthFilter(value.name);
-                      });
-                    }
-                  },
-                ),
-                SegmentedButton(
-                  segments: [
-                    ButtonSegment(
-                        value: 'unpaid',
-                        label: Text(
-                          AppLocalizations.of(context)!.segmentedUnpaid,
-                          style:
-                              const TextStyle(fontSize: GlobalThemeVariables.p),
-                        ),
-                        enabled: true),
-                    ButtonSegment(
-                        value: 'paid',
-                        label: Text(
-                          AppLocalizations.of(context)!.segmentedPaid,
-                          style:
-                              const TextStyle(fontSize: GlobalThemeVariables.p),
-                        ),
-                        enabled: true),
-                    ButtonSegment(
-                        value: 'all',
-                        label: Text(
-                          AppLocalizations.of(context)!.segmentedAll,
-                          style:
-                              const TextStyle(fontSize: GlobalThemeVariables.p),
-                        ),
-                        enabled: true)
-                  ],
-                  selected: {initialFilter},
-                  onSelectionChanged: (newFilter) {
-                    setState(() {
-                      Provider.of<BillsProvider>(context, listen: false)
-                          .changeSelectedBills(newFilter.first);
-                      initialFilter = newFilter.first;
-                    });
-                  },
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 5, 5, 5),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Total: ${totalOfSelected.toStringAsFixed(2)} $initialCurrency',
-                          style:
-                              const TextStyle(fontSize: GlobalThemeVariables.p),
-                        ),
-                        Text(
-                          '${AppLocalizations.of(context)!.totalPerPerson}${totalPerPerson.toStringAsFixed(2)} $initialCurrency',
-                          style:
-                              const TextStyle(fontSize: GlobalThemeVariables.p),
-                        )
-                      ]),
-                ),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Total: ${totalOfSelected.toStringAsFixed(2)} $initialCurrency',
+                        style:
+                            const TextStyle(fontSize: GlobalThemeVariables.p),
+                      ),
+                      Text(
+                        '${AppLocalizations.of(context)!.totalPerPerson}${totalPerPerson.toStringAsFixed(2)} $initialCurrency',
+                        style:
+                            const TextStyle(fontSize: GlobalThemeVariables.p),
+                      )
+                    ]),
                 Consumer<BillsProvider>(
                     builder: (context, billsProvider, child) {
                   return generateBillsWidget(billsProvider);
-                })
+                }),
+                _buildSegmentedFilter(),
+                _buildMonthFilter()
               ],
             )),
         floatingActionButton: FloatingActionButton.extended(
@@ -264,46 +266,16 @@ class _HomePageState extends State<HomePage> {
                 context: context,
                 builder: (BuildContext context) => AlertDialog(
                   title:
-                      const Text('Create new or continue with existing bills?'),
+                      Text(AppLocalizations.of(context)!.continueWithExisting),
                   content: const Text(''),
                   actions: <Widget>[
                     TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const AddBillFormPage()));
-                      },
-                      child: const Text('New Bill'),
+                      onPressed: _openNewBillPage,
+                      child: Text(AppLocalizations.of(context)!.newBill),
                     ),
                     TextButton(
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title:
-                                    const Text('Select bills to continue with'),
-                                content: generateMultiSelectItems(
-                                    Provider.of<BillsProvider>(context,
-                                            listen: false)
-                                        .bills),
-                                actions: [
-                                  TextButton(
-                                    child: const Text('Continue with selected'),
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const ExistingBillsPage()));
-                                    },
-                                  )
-                                ],
-                              );
-                            });
-                      },
-                      child: const Text('Continue with existing'),
+                      onPressed: _openSelectExistingBills,
+                      child: Text(AppLocalizations.of(context)!.selectBills),
                     ),
                   ],
                 ),
@@ -315,8 +287,43 @@ class _HomePageState extends State<HomePage> {
                       builder: (context) => const AddBillFormPage()));
             }
           },
-          label: Text('New Bill'),
+          label: Text(AppLocalizations.of(context)!.addBills),
           icon: const Icon(Icons.add),
         ));
+  }
+
+  Widget _expansionTile() {
+    return ExpansionTile(
+      title: const Text('Filters'),
+      children: [_buildSegmentedFilter(), _buildMonthFilter()],
+    );
+  }
+
+  _openNewBillPage() {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const AddBillFormPage()));
+  }
+
+  _openSelectExistingBills() {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(AppLocalizations.of(context)!.selectBills),
+            content: generateMultiSelectItems(
+                Provider.of<BillsProvider>(context, listen: false).bills),
+            actions: [
+              TextButton(
+                child: Text(AppLocalizations.of(context)!.continueWithSelected),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ExistingBillsPage()));
+                },
+              )
+            ],
+          );
+        });
   }
 }

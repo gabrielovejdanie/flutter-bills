@@ -8,6 +8,9 @@
     "@homeTitle": {
         "description": "Greeting"
     },
+    "noBills": "No bills",
+    "addBills": "Add bill",
+    "signOut": "Sign Out",
     "segmentedUnpaid": "Unpaid",
     "segmentedPaid": "Paid",
     "segmentedAll": "All",
@@ -25,6 +28,7 @@
     "nrOfPeople": "Nr. of people: ",
     "setToPaid": "Set to paid",
     "pricePerPerson": "Price per person: ",
+    "lastMonthDiff": "Last month difference: ",
     
     "addBillTitle": "Add Bill",
     "billName": "Bill name",
@@ -34,5 +38,21 @@
     "unitOptional": "Unit (kW, mc) *optional",
     "currencyOptional": "Currency (default lei) *optional",
     "selectMonth": "Select month of the bill",
-    "submit": "Submit"
+    "submit": "Submit",
+
+    "newOrContinue":"Add from existing",
+    "newBill":"New bill",
+    "continueWithExisting":"Create new or add from existing bills?",
+    "selectBills":"Select bills to continue with",
+    "continueWithSelected":"Continue with selected",
+    "newTotal":"New Total",
+    "save": "Save",
+
+    "fillAllFields": "Please fill all fields",
+    "editExistingTitle": "From existing",
+    "error": "There was a problem!",
+    "changesSaved": "Changes were saved!",
+    "notEnoughInformation": "Not enough information!",
+    "editBillTitle": "Edit bill"
+    
 }

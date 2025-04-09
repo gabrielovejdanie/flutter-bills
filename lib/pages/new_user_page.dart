@@ -12,7 +12,7 @@ class LoginPage extends StatefulWidget {
 class _NewUserPageState extends State<LoginPage> {
   String? errorMessage = '';
   bool isLogin = true;
-
+  bool _isObscure = true;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -31,6 +31,7 @@ class _NewUserPageState extends State<LoginPage> {
 
   Future<void> createUserWithEmailAndPassword() async {
     try {
+      print(_passwordController.text);
       await Auth().createUserWithEmailAndPassword(
         _emailController.text,
         _passwordController.text,
@@ -53,6 +54,23 @@ class _NewUserPageState extends State<LoginPage> {
         labelText: title,
       ),
     );
+  }
+
+  Widget _passwordField(String title, TextEditingController controller) {
+    return TextField(
+        obscureText: _isObscure,
+        controller: _passwordController,
+        decoration: InputDecoration(
+            labelText: title,
+            // this button is used to toggle the password visibility
+            suffixIcon: IconButton(
+                icon:
+                    Icon(_isObscure ? Icons.visibility : Icons.visibility_off),
+                onPressed: () {
+                  setState(() {
+                    _isObscure = !_isObscure;
+                  });
+                })));
   }
 
   Widget _errorMessage() {
@@ -93,7 +111,7 @@ class _NewUserPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             _enrtyField('Email', _emailController),
-            _enrtyField('Password', _passwordController),
+            _passwordField('Password', _passwordController),
             _errorMessage(),
             _submitButton(),
             _loginOrRegisterButton(),

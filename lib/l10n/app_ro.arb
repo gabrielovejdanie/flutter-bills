@@ -11,6 +11,9 @@
     "nrOfPeople": "Număr de persoane: ",
     "setToPaid": "Platită",
     "pricePerPerson": "Preț per persoană: ",
+    "lastMonthDiff": "Față de luna trecută: ",
+
+    "signOut":"Deconectează-te",
 
     "addBillTitle": "Adaugă factură",
     "billName": "Numele facturii",
@@ -20,5 +23,23 @@
     "unitOptional": "Unitate de măsură (kW, mc) *opțional",
     "currencyOptional": "Monedă (implicit lei) *optional",
     "selectMonth": "Selectează luna facturii",
-    "submit": "Trimite"
+    "submit": "Trimite",
+
+    "noBills": "Nu există facturi",
+    "addBills": "Adaugă factură",
+    "newOrContinue":"Adaugă de la existente",
+    "newBill":"Adaugă nouă",
+    "continueWithExisting":"Factură nouă sau adaugi folosind facturi existente?",
+    "selectBills":"Selectează facturi",
+    "continueWithSelected":"Continuă cu selectate",
+    "newTotal":"Total nou",
+    "save": "Salvează",
+
+    
+    "fillAllFields": "Completați toate informațiile necesare!",
+    "editExistingTitle": "Facturi existente",
+    "error": "A apărut o problemă!",
+    "changesSaved": "Schimbările au fost salvate!",
+    "notEnoughInformation": "Sunt necesare mai multe informații!",
+    "editBillTitle": "Modifică factură"
 }

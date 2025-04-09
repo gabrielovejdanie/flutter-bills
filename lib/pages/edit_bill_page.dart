@@ -72,7 +72,7 @@ class _EditBillFormPageState extends State<EditBillFormPage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Not enough information to update Bill!'),
+          content: Text(AppLocalizations.of(context)!.notEnoughInformation),
           action: SnackBarAction(
             label: 'Ok',
             onPressed: () {
@@ -87,8 +87,8 @@ class _EditBillFormPageState extends State<EditBillFormPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const CustomAppBar('Edit Bill'),
-        drawer: BillsDrawer(),
+        appBar: CustomAppBar(AppLocalizations.of(context)!.editBillTitle),
+        drawer: const BillsDrawer(),
         body: SingleChildScrollView(
           child: ConstrainedBox(
             constraints: const BoxConstraints(),

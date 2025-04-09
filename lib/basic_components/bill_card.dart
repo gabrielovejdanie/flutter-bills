@@ -16,9 +16,23 @@ class BillCard extends StatelessWidget {
     Locale locale =
         Provider.of<LanguageProvider>(context, listen: false).locale;
     if (locale == const Locale('ro')) {
-      return months.firstWhere((m) => m.romanianName == name).romanianName;
+      return months
+          .firstWhere((m) => (m.name == name) || m.romanianName == name)
+          .romanianName;
     } else {
-      return months.firstWhere((m) => m.name == name).name;
+      return months
+          .firstWhere((m) => (m.name == name) || m.romanianName == name)
+          .name;
+    }
+  }
+
+  String parseLastMonth(double lastMonthDiff) {
+    if (lastMonthDiff == 0) {
+      return '0';
+    } else if (lastMonthDiff > 0) {
+      return '+${lastMonthDiff.toStringAsFixed(2)}';
+    } else {
+      return lastMonthDiff.toStringAsFixed(2);
     }
   }
 
@@ -97,6 +111,10 @@ class BillCard extends StatelessWidget {
                   '${AppLocalizations.of(context)!.nrOfPeople}${bill.nrOfPeople.toStringAsFixed(0)}'),
               Text(
                   '${AppLocalizations.of(context)!.pricePerPerson}${bill.pricePerPerson.toStringAsFixed(2)} ${bill.currency}'),
+              bill.lastMonthDiff == null
+                  ? Container()
+                  : Text(
+                      '${AppLocalizations.of(context)!.lastMonthDiff}${parseLastMonth(bill.lastMonthDiff ?? 0)} ${bill.currency}'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [

@@ -10,6 +10,7 @@ environment:
   sdk: ">=3.4.1 <4.0.0"
 
 dependencies:
+  light_dark_theme_toggle: ^1.1.2
   intl_utils: ^2.1.0
   flutter_native_splash:
   uuid:

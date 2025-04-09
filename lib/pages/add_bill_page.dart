@@ -74,7 +74,7 @@ class _AddBillFormPageState extends State<AddBillFormPage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Not enough information to create Bill!'),
+          content: Text(AppLocalizations.of(context)!.notEnoughInformation),
           action: SnackBarAction(
             label: 'Ok',
             onPressed: () {
@@ -90,7 +90,7 @@ class _AddBillFormPageState extends State<AddBillFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppBar(AppLocalizations.of(context)!.addBillTitle),
-        drawer: BillsDrawer(),
+        drawer: const BillsDrawer(),
         body: SingleChildScrollView(
           child: ConstrainedBox(
             constraints: const BoxConstraints(),

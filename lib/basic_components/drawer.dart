@@ -5,6 +5,7 @@ import 'package:bills_calculator/theme/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BillsDrawer extends StatefulWidget {
   const BillsDrawer({super.key});
@@ -42,13 +43,14 @@ class _BillsDrawerState extends State<BillsDrawer> {
           ),
           Padding(
             padding: const EdgeInsets.all(16),
-            child: Row(
+            child: Column(
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 textBaseline: TextBaseline.alphabetic,
                 children: <Widget>[
                   _userEmail(),
-                  PrimaryButton('Sign Out', _signOut),
+                  PrimaryButton(
+                      AppLocalizations.of(context)!.signOut, _signOut),
                 ]),
           ),
           Padding(
@@ -70,6 +72,7 @@ class _BillsDrawerState extends State<BillsDrawer> {
               onSelectionChanged: (newFilter) {
                 Provider.of<LanguageProvider>(context, listen: false).locale =
                     newFilter.first;
+                Navigator.pop(context);
               },
             ),
           ),

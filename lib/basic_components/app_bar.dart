@@ -2,6 +2,7 @@ import 'package:bills_calculator/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bills_calculator/theme/theme.dart';
+import 'package:light_dark_theme_toggle/light_dark_theme_toggle.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -21,6 +22,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
                 Navigator.pop(context);
+                if (title == 'Adaugă factură' || title == 'Add bill') {
+                  Navigator.pop(context);
+                }
+                if (title == 'Adaugă facturi după existente' ||
+                    title == 'Edit existing bills') {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                }
               },
             )
           : Padding(
@@ -31,11 +40,22 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
       centerTitle: true,
       actions: <Widget>[
-        IconButton(
-            onPressed: () {
-              Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
-            },
-            icon: const Icon(Icons.lightbulb)),
+        LightDarkThemeToggle(
+          value: Provider.of<ThemeProvider>(context, listen: false)
+                  .themeData
+                  .brightness ==
+              Brightness.light,
+          // Initial value (false for dark, true for light)
+          onChanged: (bool value) {
+            Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+          },
+          size: GlobalThemeVariables.h1,
+          themeIconType: ThemeIconType.expand,
+          color: Theme.of(context).iconTheme.color,
+          tooltip: 'Toggle Theme',
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        ),
         Builder(
           builder: (context) {
             return IconButton(

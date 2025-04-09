@@ -20,7 +20,7 @@ List<Month> months = [
   Month(
       index: 0,
       name: 'Filter by month',
-      romanianName: 'Selecteaza o lună',
+      romanianName: 'Selectează o lună',
       startDate: Timestamp.fromDate(DateTime.now()),
       endDate: Timestamp.fromDate(DateTime.now())),
   for (var i = 1; i <= 12; i++)

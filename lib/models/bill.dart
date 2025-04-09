@@ -15,6 +15,7 @@ class Bill {
   String id;
   String month;
   bool isPaid;
+  double? lastMonthDiff;
 
   Bill(
       {required this.currency,
@@ -46,6 +47,7 @@ class Bill {
       'id': id,
       'isPaid': isPaid,
       'month': month,
+      'lastMonthDiff': lastMonthDiff,
     };
   }
 
@@ -64,6 +66,7 @@ class Bill {
       'id': id,
       'isPaid': isPaid,
       'month': month,
+      'lastMonthDiff': lastMonthDiff,
     };
   }
 
@@ -94,19 +97,19 @@ class Bill {
     var uuid = const Uuid();
 
     return Bill(
-      currency: this.currency,
-      from: this.from,
-      name: this.name,
-      nrOfPeople: this.nrOfPeople,
-      pricePerPerson: this.pricePerPerson,
-      pricePerUnit: this.pricePerUnit,
-      quantity: this.quantity,
-      to: this.to,
-      total: this.total,
-      unit: this.unit,
+      currency: currency,
+      from: from,
+      name: name,
+      nrOfPeople: nrOfPeople,
+      pricePerPerson: pricePerPerson,
+      pricePerUnit: pricePerUnit,
+      quantity: quantity,
+      to: to,
+      total: total,
+      unit: unit,
       id: uuid.v4(),
       isPaid: false,
-      month: this.month,
+      month: month,
     );
   }
 }

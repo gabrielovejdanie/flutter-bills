@@ -1,6 +1,7 @@
 import 'package:bills_calculator/core/auth.dart';
 import 'package:bills_calculator/models/bill.dart';
 import 'package:bills_calculator/core/bills_provider.dart';
+import 'package:bills_calculator/models/months.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -31,12 +32,12 @@ class DatabaseService {
               b.pricePerPerson = 0;
               b.pricePerUnit = 0;
             }
-            print(b.pricePerUnit);
             billsPerUser.add(b);
           }
         }
 
         billsPerUser = billsPerUser.reversed.toList();
+        billsPerUser = updatePreviousMonthBills(billsPerUser);
         Provider.of<BillsProvider>(context, listen: false).bills = billsPerUser;
         Provider.of<BillsProvider>(context, listen: false).loading = false;
         return Future.value(billsPerUser);
@@ -44,6 +45,48 @@ class DatabaseService {
     }
     return Future.value(billsPerUser);
   }
+
+  List<Bill> updatePreviousMonthBills(List<Bill> bills) {
+    for (var i = 0; i < bills.length; i++) {
+      Bill currentBill = bills[i];
+      Month month = months
+          .where((m) => (m.name == currentBill.month ||
+              m.romanianName == currentBill.month))
+          .first;
+      Month prevMonth = months[month.index - 1];
+
+      for (var j = 0; j < bills.length; j++) {
+        Bill billToCompare = bills[j];
+        Month monthToCompare = months
+            .where((m) => (m.name == billToCompare.month ||
+                m.romanianName == billToCompare.month))
+            .first;
+
+        if (billToCompare.name == currentBill.name &&
+            monthToCompare.index == prevMonth.index) {
+          currentBill.lastMonthDiff = currentBill.total - billToCompare.total;
+        }
+      }
+
+      // //find prev bills that fit
+      // List<Bill> sameNameBills =
+      //     bills.where((b) => b.name == bills[i].name).toList();
+      // for (var j = 0; j < sameNameBills.length; i++) {
+      //   Bill snBill = sameNameBills[j];
+      //   Month snMonth = months
+      //       .where((m) =>
+      //           (m.name == snBill.month || m.romanianName == snBill.month))
+      //       .first;
+      //   print(snBill.name + ' - ' + snMonth.name);
+      //   if (snMonth.index == prevMonth.index) {
+      //     currentBill.lastMonthDiff = snBill.total - currentBill.total;
+      //   }
+      // }
+    }
+    return bills;
+  }
+
+  findPrevBills(List<Bill> bills, Bill curentBill) {}
 
   void togglePaid(context, bill) {
     List<Bill> oldBills =
